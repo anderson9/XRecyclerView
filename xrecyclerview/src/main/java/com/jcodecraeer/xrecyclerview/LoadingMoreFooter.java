@@ -76,8 +76,15 @@ public class LoadingMoreFooter extends LinearLayout {
             loadingDoneHint = (String)getContext().getText(R.string.loading_done);
         }
 
+        LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        lp.setMargins(0, 0, 0, 0);
+        this.setLayoutParams(lp);
+        this.setPadding(0, 0, 0, 0);
+
         addView(mContainer);
-        setGravity(Gravity.CENTER);
+        setGravity(Gravity.CENTER_HORIZONTAL);
+
+        measure(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     public void setProgressStyle(int style) {
