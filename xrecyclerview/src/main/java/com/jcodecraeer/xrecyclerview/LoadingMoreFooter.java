@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -14,7 +15,7 @@ import com.jcodecraeer.xrecyclerview.progressindicator.AVLoadingIndicatorView;
 
 public class LoadingMoreFooter extends LinearLayout {
 
-    private SimpleViewSwitcher progressCon;
+    private SimpleViewSwitcher mProgressBar;
     public final static int STATE_LOADING = 0;
     public final static int STATE_COMPLETE = 1;
     public final static int STATE_NOMORE = 2;
@@ -51,21 +52,19 @@ public class LoadingMoreFooter extends LinearLayout {
     }
 
     public void initView(){
-        setGravity(Gravity.CENTER);
-        setLayoutParams(new RecyclerView.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        progressCon = new SimpleViewSwitcher(getContext());
-        progressCon.setLayoutParams(new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        AVLoadingIndicatorView progressView = new  AVLoadingIndicatorView(this.getContext());
+        LinearLayout mContainer = (LinearLayout) LayoutInflater.from(getContext()).inflate(
+                R.layout.listview_footer, null);
+
+        mProgressBar = (SimpleViewSwitcher)mContainer.findViewById(R.id.listview_foot_progress);
+        AVLoadingIndicatorView progressView = new  AVLoadingIndicatorView(getContext());
         progressView.setIndicatorColor(0xffB5B5B5);
         progressView.setIndicatorId(ProgressStyle.BallSpinFadeLoader);
-        progressCon.setView(progressView);
 
-        addView(progressCon);
-        mText = new TextView(getContext());
-        mText.setText(getContext().getString(R.string.listview_loading));
+
+        mProgressBar.setView(progressView);
+
+        mText = (TextView) mContainer.findViewById(R.id.listview_foot_more);
 
         if(loadingHint == null || loadingHint.equals("")){
             loadingHint = (String)getContext().getText(R.string.listview_loading);
@@ -77,28 +76,25 @@ public class LoadingMoreFooter extends LinearLayout {
             loadingDoneHint = (String)getContext().getText(R.string.loading_done);
         }
 
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins( (int)getResources().getDimension(R.dimen.textandiconmargin),0,0,0 );
-
-        mText.setLayoutParams(layoutParams);
-        addView(mText);
+        addView(mContainer);
+        setGravity(Gravity.CENTER);
     }
 
     public void setProgressStyle(int style) {
         if(style == ProgressStyle.SysProgress){
-            progressCon.setView(new ProgressBar(getContext(), null, android.R.attr.progressBarStyle));
+            mProgressBar.setView(new ProgressBar(getContext(), null, android.R.attr.progressBarStyle));
         }else{
             AVLoadingIndicatorView progressView = new  AVLoadingIndicatorView(this.getContext());
             progressView.setIndicatorColor(0xffB5B5B5);
             progressView.setIndicatorId(style);
-            progressCon.setView(progressView);
+            mProgressBar.setView(progressView);
         }
     }
 
     public void  setState(int state) {
         switch(state) {
             case STATE_LOADING:
-                progressCon.setVisibility(View.VISIBLE);
+                mProgressBar.setVisibility(View.VISIBLE);
                 mText.setText(loadingHint);
                 this.setVisibility(View.VISIBLE);
                     break;
@@ -108,7 +104,7 @@ public class LoadingMoreFooter extends LinearLayout {
                 break;
             case STATE_NOMORE:
                 mText.setText(noMoreHint);
-                progressCon.setVisibility(View.GONE);
+                mProgressBar.setVisibility(View.GONE);
                 this.setVisibility(View.VISIBLE);
                 break;
         }
