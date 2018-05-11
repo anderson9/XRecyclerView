@@ -358,6 +358,10 @@ public class XRecyclerView extends RecyclerView {
                 if (isOnTop() && pullRefreshEnabled && appbarState == AppBarStateChangeListener.State.EXPANDED) {
                     mRefreshHeader.onMove(deltaY / DRAG_RATE);
                     if (mRefreshHeader.getVisibleHeight() > 0 && mRefreshHeader.getState() < ArrowRefreshHeader.STATE_REFRESHING) {
+                        MotionEvent event = MotionEvent.obtain(ev);
+                        event.setAction(MotionEvent.ACTION_DOWN);
+                        super.onTouchEvent(event);
+                        event.recycle();
                         return false;
                     }
                 }

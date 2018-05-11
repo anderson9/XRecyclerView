@@ -75,15 +75,11 @@ public abstract class BaseIndicatorController {
                         animator.start();
                     }
                     break;
-                case END:
-                    if (isRunning){
+                case END:  //内存泄露修复
                         animator.end();
-                    }
                     break;
                 case CANCEL:
-                    if (isRunning){
                         animator.cancel();
-                    }
                     break;
             }
         }
