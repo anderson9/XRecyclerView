@@ -300,11 +300,9 @@ public class XRecyclerView extends RecyclerView {
         return mWrapAdapter.getHeadersCount()+1;
     }
 
-    /** ======================================================= end ======================================================= */
-
     @Override
-    public void onScrollStateChanged(int state) {
-        super.onScrollStateChanged(state);
+    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+        super.onScrollChanged(l, t, oldl, oldt);
         if ( mLoadingListener != null && !isLoadingData && loadingMoreEnabled) {
             LayoutManager layoutManager = getLayoutManager();
             int lastVisibleItemPosition;
@@ -321,11 +319,11 @@ public class XRecyclerView extends RecyclerView {
 
             if (
                     layoutManager.getChildCount() > 0
-                    && lastVisibleItemPosition >= adjAdapterItemCount - limitNumberToCallLoadMore
-                    && adjAdapterItemCount >= layoutManager.getChildCount()
-                    && !isNoMore
-                    && mRefreshHeader.getState() < ArrowRefreshHeader.STATE_REFRESHING
-            )
+                            && lastVisibleItemPosition >= adjAdapterItemCount - limitNumberToCallLoadMore
+                            && adjAdapterItemCount >= layoutManager.getChildCount()
+                            && !isNoMore
+                            && mRefreshHeader.getState() < ArrowRefreshHeader.STATE_REFRESHING
+                    )
             {
                 isLoadingData = true;
                 if (mFootView instanceof LoadingMoreFooter) {
@@ -338,6 +336,11 @@ public class XRecyclerView extends RecyclerView {
                 mLoadingListener.onLoadMore();
             }
         }
+
+    }
+    @Override
+    public void onScrollStateChanged(int state) {
+        super.onScrollStateChanged(state);
     }
 
     @Override
